@@ -1,0 +1,14 @@
+"use client";
+
+import { useEffect, useMemo, useState } from "react";
+import { ChevronDown, SlidersHorizontal } from "lucide-react";
+import PageFrame from "@/components/PageFrame";
+import ProductGrid from "@/components/ProductGrid";
+import { categories, products } from "@/data/catalog";
+
+export default function ShopPage() {
+  const [search, setSearch] = useState(""); const [category, setCategory] = useState("All products"); const [stock, setStock] = useState("All stock"); const [sort, setSort] = useState("featured");
+  useEffect(() => { const loadQuery = window.setTimeout(() => { const params = new URLSearchParams(window.location.search); setSearch(params.get("search") ?? ""); setCategory(params.get("category") ?? "All products"); }, 0); return () => window.clearTimeout(loadQuery); }, []);
+  const visibleProducts = useMemo(() => products.filter((product) => (category === "All products" || product.category === category) && (stock === "All stock" || product.stock === stock) && `${product.name} ${product.category} ${product.tag ?? ""}`.toLowerCase().includes(search.toLowerCase())).sort((a, b) => sort === "price-low" ? (a.salePrice ?? a.price) - (b.salePrice ?? b.price) : sort === "price-high" ? (b.salePrice ?? b.price) - (a.salePrice ?? a.price) : sort === "name" ? a.name.localeCompare(b.name) : 0), [category, search, sort, stock]);
+  return <PageFrame><section className="listing-page"><div className="container"><div className="page-heading"><div><span className="eyebrow"><span /> NovaMart collection</span><h1>Shop all products</h1><p>Everyday essentials, thoughtfully selected for your home.</p></div><span className="result-count">{visibleProducts.length} products</span></div><div className="listing-toolbar"><label className="listing-search"><SlidersHorizontal size={16} /><input aria-label="Search the catalogue" placeholder="Search the catalogue..." value={search} onChange={(event) => setSearch(event.target.value)} /></label><div className="filter-pills"><button className={category === "All products" ? "selected" : ""} onClick={() => setCategory("All products")}>All</button>{categories.map((item) => <button className={category === item.name ? "selected" : ""} key={item.name} onClick={() => setCategory(item.name)}>{item.name}</button>)}</div><label className="compact-select">Stock<select value={stock} onChange={(event) => setStock(event.target.value)}><option>All stock</option><option>In stock</option><option>Low stock</option></select><ChevronDown size={14} /></label><label className="compact-select">Sort<select value={sort} onChange={(event) => setSort(event.target.value)}><option value="featured">Featured</option><option value="price-low">Price low</option><option value="price-high">Price high</option><option value="name">Name</option></select><ChevronDown size={14} /></label></div><ProductGrid items={visibleProducts} /></div></section></PageFrame>;
+}
