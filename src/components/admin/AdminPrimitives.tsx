@@ -1,0 +1,11 @@
+"use client";
+
+import { Check, CircleAlert, X } from "lucide-react";
+import { useEffect, type ReactNode } from "react";
+
+export function AdminPageHeader({ eyebrow, title, description, action }: { eyebrow?: string; title: string; description?: string; action?: ReactNode }) { return <div className="admin-page-header"><div>{eyebrow && <span className="admin-eyebrow">{eyebrow}</span>}<h2>{title}</h2>{description && <p>{description}</p>}</div>{action}</div>; }
+export function AdminToast({ message, type = "success", onClose }: { message: string; type?: "success" | "error"; onClose: () => void }) { useEffect(() => { const timer = window.setTimeout(onClose, 3200); return () => window.clearTimeout(timer); }, [onClose]); return <div className={`admin-toast ${type}`}><span>{type === "success" ? <Check size={16} /> : <CircleAlert size={16} />}</span><p>{message}</p><button onClick={onClose} aria-label="Dismiss notification"><X size={15} /></button></div>; }
+export function ConfirmDialog({ title, message, confirmLabel = "Delete", onCancel, onConfirm }: { title: string; message: string; confirmLabel?: string; onCancel: () => void; onConfirm: () => void }) { return <div className="admin-dialog-backdrop"><div className="admin-confirm-dialog"><span className="danger-icon"><CircleAlert size={22} /></span><h3>{title}</h3><p>{message}</p><div><button className="admin-button secondary" onClick={onCancel}>Cancel</button><button className="admin-button danger" onClick={onConfirm}>{confirmLabel}</button></div></div></div>; }
+export function StatusBadge({ status }: { status: string }) { return <span className={`admin-status status-${status.toLowerCase()}`}><i />{status}</span>; }
+export function EmptyAdmin({ title, text }: { title: string; text: string }) { return <div className="admin-empty"><span><PackageIcon /></span><h3>{title}</h3><p>{text}</p></div>; }
+function PackageIcon() { return <svg width="25" height="25" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7"><path d="m16.5 9.4-9-5.19M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z" /><path d="M3.27 6.96 12 12.01l8.73-5.05M12 22.08V12" /></svg>; }

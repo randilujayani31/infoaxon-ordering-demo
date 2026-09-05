@@ -1,4 +1,5 @@
 import type { CartItem, Order, User } from "@/store/AppStore";
+import { defaultCategories, defaultProducts } from "@/data/catalog";
 
 export const DEMO_USER: User = {
   id: "demo-customer",
@@ -20,6 +21,16 @@ export const STORAGE_KEYS = {
   users: "novamart-users",
   session: "novamart-session",
   recentOrder: "novamart-recent-order",
+  products: "novamart-products",
+  categories: "novamart-categories",
+  adminSession: "novamart-admin-session",
+  settings: "novamart-settings",
 };
+
+export type AdminUser = { email: string; name: string; role: "Administrator" };
+export type StoreSettings = { storeName: string; tagline: string; email: string; phone: string; address: string; freeDeliveryThreshold: number; deliveryCharge: number; openingHours: string; currency: "LKR"; cashOnDelivery: boolean; bankTransfer: boolean; bankName: string; accountName: string; accountNumber: string; branch: string };
+export const DEMO_ADMIN: AdminUser = { email: "admin@novamart.lk", name: "NovaMart Admin", role: "Administrator" };
+export const defaultSettings: StoreSettings = { storeName: "NovaMart", tagline: "Everything you need, delivered", email: "hello@novamart.lk", phone: "+94 11 234 5678", address: "24 Flower Road, Colombo 07", freeDeliveryThreshold: 5000, deliveryCharge: 350, openingHours: "Mon - Sun, 8:00 AM - 8:00 PM", currency: "LKR", cashOnDelivery: true, bankTransfer: true, bankName: "Commercial Bank", accountName: "NovaMart (Pvt) Ltd", accountNumber: "0123456789", branch: "Colombo 07" };
+export { defaultCategories, defaultProducts };
 
 export const orderItemCount = (cart: CartItem[]) => cart.reduce((sum, item) => sum + item.quantity, 0);

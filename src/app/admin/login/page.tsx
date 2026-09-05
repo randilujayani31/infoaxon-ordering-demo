@@ -1,0 +1,14 @@
+"use client";
+
+import { ArrowRight, Eye, EyeOff, LockKeyhole, Store } from "lucide-react";
+import Link from "next/link";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { useAppStore } from "@/store/AppStore";
+
+export default function AdminLoginPage() {
+  const router = useRouter(); const { admin, hydrated, adminLogin } = useAppStore(); const [email, setEmail] = useState(""); const [password, setPassword] = useState(""); const [showPassword, setShowPassword] = useState(false); const [error, setError] = useState("");
+  useEffect(() => { if (hydrated && admin) router.replace("/admin"); }, [admin, hydrated, router]);
+  const submit = (event: React.FormEvent) => { event.preventDefault(); if (!email || !password) { setError("Enter your admin email and password."); return; } if (!adminLogin(email, password)) { setError("Invalid admin credentials. Use the demo access below."); return; } router.push("/admin"); };
+  return <main className="admin-login-page"><div className="admin-login-art"><div className="admin-login-brand"><span><Store size={21} /></span><strong>Nova<span>Mart</span></strong></div><div><span className="admin-login-kicker">Operations, made clearer</span><h1>Keep the everyday<br /><em>moving forward.</em></h1><p>Manage products, orders, customers and store settings from one calm workspace.</p></div><div className="admin-login-stats"><span><b>24+</b><small>Active products</small></span><span><b>6</b><small>Store categories</small></span><span><b>4.9/5</b><small>Customer rating</small></span></div></div><div className="admin-login-card"><Link href="/" className="back-store">← Back to store</Link><span className="admin-eyebrow">Administrator access</span><h2>Welcome back.</h2><p>Sign in to manage your NovaMart demo store.</p><form onSubmit={submit} className="admin-auth-form"><label>Email address<input type="email" value={email} onChange={(event) => { setEmail(event.target.value); setError(""); }} placeholder="admin@novamart.lk" /></label><label>Password<span className="admin-password-field"><input type={showPassword ? "text" : "password"} value={password} onChange={(event) => { setPassword(event.target.value); setError(""); }} placeholder="Your password" /><button type="button" onClick={() => setShowPassword((value) => !value)} aria-label="Toggle password visibility">{showPassword ? <EyeOff size={16} /> : <Eye size={16} />}</button></span></label>{error && <span className="admin-auth-error">{error}</span>}<button className="admin-button primary" type="submit">Open admin workspace <ArrowRight size={17} /></button></form><div className="admin-demo-login"><LockKeyhole size={15} /><span><b>Demo credentials</b><small>admin@novamart.lk · admin123</small></span></div><small className="admin-login-note">This is a frontend-only demo. No real account is created.</small></div></main>;
+}

@@ -1,6 +1,6 @@
 export const categoryNames = ["Groceries", "Beverages", "Household", "Personal Care", "Electronics", "Stationery"] as const;
 
-export type Category = (typeof categoryNames)[number];
+export type Category = string;
 export type StockStatus = "In stock" | "Low stock";
 
 export type Product = {
@@ -15,7 +15,13 @@ export type Product = {
   rating: number;
   description: string;
   tag?: string;
+  sku?: string;
+  stockQuantity?: number;
+  active?: boolean;
+  featured?: boolean;
 };
+
+export type StoreCategory = { name: string; icon: string; color: string; count: string; description: string; active?: boolean };
 
 export const categories = [
   { name: "Groceries", icon: "🥬", color: "mint", count: "240+ items", description: "Fresh pantry staples for every kitchen." },
@@ -52,6 +58,9 @@ export const products: Product[] = [
   { id: "planner", name: "Weekmaker Desk Planner", category: "Stationery", image: image("photo-1499951360447-b19be8fe80f5"), price: 1250, salePrice: 990, unit: "2026 planner", stock: "In stock", rating: 4.8, description: "A calm, spacious weekly planner for making room for what matters.", tag: "New" },
   { id: "markers", name: "ColourPop Markers", category: "Stationery", image: image("photo-1517842645767-c639042777db"), price: 690, unit: "Pack of 8", stock: "In stock", rating: 4.5, description: "Bright, quick-drying markers for study notes and creative projects." },
 ];
+
+export const defaultProducts = products.map((product, index) => ({ ...product, sku: `NM-${String(index + 1).padStart(3, "0")}`, stockQuantity: product.stock === "Low stock" ? 4 : 24, active: true, featured: index < 8 }));
+export const defaultCategories: StoreCategory[] = categories.map((category) => ({ ...category, active: true }));
 
 export const findProduct = (id: string) => products.find((product) => product.id === id);
 export const discountPercent = (product: Product) => product.salePrice ? Math.round((1 - product.salePrice / product.price) * 100) : 0;
